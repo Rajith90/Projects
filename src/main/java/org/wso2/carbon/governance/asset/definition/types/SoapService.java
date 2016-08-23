@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.governance.asset.definition.types;
 
+import org.wso2.carbon.governance.asset.definition.annotations.Composite;
 import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
 import org.wso2.carbon.governance.asset.definition.annotations.Required;
 import org.wso2.carbon.governance.asset.definition.annotations.Table;
@@ -27,16 +28,19 @@ import org.wso2.carbon.governance.asset.definition.annotations.Type;
 @Type (name = "Soap Service", mediaType = "vnd.wso2.soapservice")
 public class SoapService extends Service {
     @Required(value = true)
-    @TextField (name = "namespace")
+    @TextField (label = "namespace")
     private String namespace;
-    @OptionsField(name = "transportProtocols", values = {"HTTP", "HTTPS", "SMTP"})
+    @Composite
+    private EndPoint endPoint;
+    @OptionsField(label = "transportProtocols", values = {"HTTP", "HTTPS", "SMTP"})
     private String transportProtocol  ;
-    @OptionsField(name = "messageFormats", values = {"Soap 1.1", "Soap 1.2", "XML", "JSON"})
+    @OptionsField(label = "messageFormats", values = {"Soap 1.1", "Soap 1.2", "XML", "JSON"})
     private String messageFormat ;
-    @OptionsField(name = "contactValues", values = {"Technical Owner", "Business Owner"})
+    @OptionsField(label = "contactValues", values = {"Technical Owner", "Business Owner"})
     private String contactValue ;
-    @Table(label = "Doc Links", columns = 3, rows =2, columnHeadings = {"Document Type", "URL", "Comment"})
+    @Table(label = "Doc Links", columns = 3, rows =1, columnHeadings = {"Document Type", "URL", "Comment"})
     private String docLinks[][] = new String[2][3];
+
 
     public String getNamespace() {
         return namespace;
@@ -77,13 +81,16 @@ public class SoapService extends Service {
     public void setDocLinks(String[][] docLinks) {
         this.docLinks = docLinks;
     }
-    /*public Map<String, String> getEndpoints() {
-        return endpoints;
+
+    public EndPoint getEndPoint() {
+        return endPoint;
     }
 
-    public void setEndpoints(Map<String, String> endpoints) {
-        this.endpoints = endpoints;
-    }*/
+    public void setEndPoint(EndPoint endPoint) {
+        this.endPoint = endPoint;
+    }
+
+
 }
 
 

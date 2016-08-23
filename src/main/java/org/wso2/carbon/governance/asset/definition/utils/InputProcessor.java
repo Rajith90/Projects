@@ -19,6 +19,7 @@
 package org.wso2.carbon.governance.asset.definition.utils;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.wso2.carbon.governance.asset.definition.annotations.Composite;
 import org.wso2.carbon.governance.asset.definition.annotations.Table;
 import org.wso2.carbon.governance.asset.definition.types.Type;
 
@@ -33,9 +34,13 @@ import java.util.HashMap;
 
 public class InputProcessor {
 
-    public static Type readInputs(HashMap<String, Class> assetDefinitions) {
+    public static Type readInputs(HashMap<String, Class> assetDefinitions) throws IOException {
         Type assetInstance = null;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+        InputStreamReader is = null;
+        BufferedReader br = null;
+        try {
+            is = new InputStreamReader(System.in);
+            br = new BufferedReader(is);
             System.out.println("Please select the asset type you want to add : ");
             for (String assetTypes : assetDefinitions.keySet()) {
                 System.out.println("* " + assetTypes);
@@ -46,8 +51,14 @@ public class InputProcessor {
             assetInstance = (Type) constructor.newInstance();
             for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetDefinition)) {
                 try {
-                    if (field.isAnnotationPresent(Table.class)) {
-                        String[][] table = AnnotationProcessor.tableAnnotationProcessor(field);
+                    if (field.isAnnotationPresent(Composite.class)) {
+                        System.out.println("#######   " + field.getType().getSimpleName());
+                        String compositeAssetType = field.getType().getSimpleName();
+                        Class compositeAssetClass = assetDefinitions.get(compositeAssetType);
+                        Type compositeAsset = buildCompositeField(compositeAssetClass, br);
+                        PropertyUtils.setProperty(assetInstance, field.getName(), compositeAsset);
+                    } else if (field.isAnnotationPresent(Table.class)) {
+                        String[][] table = AnnotationProcessor.tableAnnotationProcessor(field, br);
                         PropertyUtils.setProperty(assetInstance, field.getName(), table);
                     } else {
                         System.out.println("Please enter value for " + field.getName());
@@ -60,7 +71,7 @@ public class InputProcessor {
                         PropertyUtils.setProperty(assetInstance, field.getName(), enteredValue);
                     }
                 } catch (NoSuchMethodException e) {
-                   e.printStackTrace();
+                    e.printStackTrace();
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
@@ -70,17 +81,63 @@ public class InputProcessor {
 
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }  catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
-        }  catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return assetInstance;
     }
 
+    public static Type buildCompositeField(Class assetDefinition, BufferedReader br) throws IOException {
+        Type assetInstance = null;
+        Constructor constructor = null;
+        if (assetDefinition != null) {
+            try {
+
+                constructor = assetDefinition.getConstructor();
+                assetInstance = (Type) constructor.newInstance();
+                for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetDefinition)) {
+                    try {
+                        if (field.isAnnotationPresent(Table.class)) {
+                            String[][] table = AnnotationProcessor.tableAnnotationProcessor(field, br);
+                            PropertyUtils.setProperty(assetInstance, field.getName(), table);
+                        } else {
+                            System.out.println("Please enter value for " + field.getName());
+                            CommonUtils.preProcessField(field);
+                            String enteredValue;
+                            do {
+                                enteredValue = br.readLine();
+                            } while (!CommonUtils.validateField(field, enteredValue));
+
+                            PropertyUtils.setProperty(assetInstance, field.getName(), enteredValue);
+                        }
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        return assetInstance;
+    }
 }

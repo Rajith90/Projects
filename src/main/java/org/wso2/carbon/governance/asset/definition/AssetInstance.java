@@ -18,6 +18,7 @@
 package org.wso2.carbon.governance.asset.definition;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.wso2.carbon.governance.asset.definition.annotations.Composite;
 import org.wso2.carbon.governance.asset.definition.annotations.Group;
 import org.wso2.carbon.governance.asset.definition.annotations.Table;
 import org.wso2.carbon.governance.asset.definition.types.Type;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class AssetInstance {
     private Type assetDetails;
@@ -40,10 +42,15 @@ public class AssetInstance {
     }
 
     public void persistAsset() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        System.out.println("***************************   Asset Details ***********************************");
         Class assetClass = assetDetails.getClass();
         Set<String> groupedFieldList = new HashSet<>();;
         for(Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetClass)){
-            if( field.isAnnotationPresent(Group.class)){
+            if (field.isAnnotationPresent(Composite.class)){
+                System.out.println("*********  "+field.getType().getSimpleName() +" Details ***********");
+                compositeAssetPersist((Type) PropertyUtils.getProperty(assetDetails, field.getName()));
+                System.out.println("*********************************************************************");
+            } else if( field.isAnnotationPresent(Group.class)){
                 Group group = field.getDeclaredAnnotation(Group.class);
                 List<String> groupedFields = Arrays.asList(group.fields());
                 System.out.println("Fields with group name : "+ group.name());
@@ -72,6 +79,55 @@ public class AssetInstance {
             } else {
                 if (!groupedFieldList.contains(field.getName())) {
                     System.out.println(field.getName() + ":" + PropertyUtils.getProperty(assetDetails, field.getName()));
+                }
+            }
+        }
+    }
+
+    private void compositeAssetPersist(Type assetCompositeDetails) throws InvocationTargetException,
+            IllegalAccessException,
+            NoSuchMethodException {
+        if(assetCompositeDetails != null) {
+        Class assetClass = assetCompositeDetails.getClass();
+        Set<String> groupedFieldList = new HashSet<>();
+
+            for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetClass)) {
+                if (field.isAnnotationPresent(Composite.class)) {
+                    System.out.println(field.getClass().getSimpleName() + " Details :");
+                    compositeAssetPersist((Type) PropertyUtils.getProperty(assetCompositeDetails, field.getName()));
+                    System.out.println("*********************************************************************");
+                } else if (field.isAnnotationPresent(Group.class)) {
+                    Group group = field.getDeclaredAnnotation(Group.class);
+                    List<String> groupedFields = Arrays.asList(group.fields());
+                    System.out.println("Fields with group name : " + group.name());
+                    for (String element : groupedFields) {
+                        try {
+                            System.out.println("\t" + element + ":" + PropertyUtils.getProperty(assetCompositeDetails, element));
+                            groupedFieldList.add(element);
+                        } catch (NoSuchMethodException e) {
+                            System.err.println("No field exist with name \"" + element + "\" for group " + group.name());
+                        }
+                    }
+                } else if (field.isAnnotationPresent(Table.class)) {
+                    Table table = field.getDeclaredAnnotation(Table.class);
+                    String[][] tableElements = (String[][]) PropertyUtils
+                            .getProperty(assetCompositeDetails, field.getName());
+                    System.out.println(table.label());
+                    for (int j = 0; j < table.columns(); j++) {
+                        System.out.print("\t" + table.columnHeadings()[j]);
+                    }
+                    System.out.println();
+                    for (int i = 0; i < table.rows(); i++) {
+                        for (int j = 0; j < table.columns(); j++) {
+                            System.out.print("\t" + tableElements[i][j]);
+                        }
+                        System.out.println();
+                    }
+                } else {
+                    if (!groupedFieldList.contains(field.getName())) {
+                        System.out.println(field.getName() + ":" + PropertyUtils
+                                .getProperty(assetCompositeDetails, field.getName()));
+                    }
                 }
             }
         }

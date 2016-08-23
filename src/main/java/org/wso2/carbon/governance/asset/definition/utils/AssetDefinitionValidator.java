@@ -31,6 +31,11 @@ public class AssetDefinitionValidator {
     public static boolean validateFields(Class assetDefinition){
         boolean isValid = true;
         for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetDefinition)){
+            if(field.getDeclaredAnnotations().length == 0){
+                System.err.println(field.getName() +" field does not contain any annotation");
+                System.err.println(assetDefinition.getName() + " : Invalid Definition");
+                return false;
+            }
             for (Annotation annotation : field.getDeclaredAnnotations()) {
                 String annotationName = annotation.annotationType().getSimpleName();
                 if (annotation.equals(Constants.TEXT_FIELD_ANNOTATION) && !field.getType().isAssignableFrom(Constants

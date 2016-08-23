@@ -24,5 +24,4 @@ import java.lang.annotation.RetentionPolicy;
 @Retention (RetentionPolicy.RUNTIME)
 public @interface TextArea {
     String label() default "";
-    String name();
 }

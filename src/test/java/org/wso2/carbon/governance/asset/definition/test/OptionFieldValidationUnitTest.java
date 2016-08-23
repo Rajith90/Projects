@@ -45,7 +45,7 @@ public class OptionFieldValidationUnitTest {
 }
 
 class Example {
-    @OptionsField(name = "", label = "", values = {})
+    @OptionsField( label = "", values = {})
     private int country;
 
 }

@@ -17,18 +17,16 @@
  */
 package org.wso2.carbon.governance.asset.definition.types;
 
-import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
 import org.wso2.carbon.governance.asset.definition.annotations.Type;
-import org.wso2.carbon.governance.asset.definition.annotations.MediaType;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 
 @Type (name = "EndPoint", mediaType = "vnd.wso2.endpoint")
 public class EndPoint extends org.wso2.carbon.governance.asset.definition.types.Type {
-    @TextField(name = "version")
+    @TextField(label = "version")
     private String version;
-    @TextField(name = "address")
+    @TextField(label = "address")
     private String address;
-    @TextField(name = "environment")
+    //@TextField(label = "environment")
     private String environment;
     /*@OptionsField(name = "supportedTypes", values = {"HTTP", "HTTPS"})
     String[] types;*/

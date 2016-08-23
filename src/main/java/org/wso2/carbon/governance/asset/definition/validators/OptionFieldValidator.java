@@ -27,7 +27,7 @@ public class OptionFieldValidator implements ConstraintValidator<OptionsField,Ob
 
     private Object name;
     @Override public void initialize(OptionsField optionsField) {
-        this.name = optionsField.name();
+        this.name = optionsField.label();
     }
 
     @Override public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {

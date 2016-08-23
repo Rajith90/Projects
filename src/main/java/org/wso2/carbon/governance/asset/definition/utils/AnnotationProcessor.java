@@ -50,12 +50,12 @@ public class AnnotationProcessor {
         return true;
     }
 
-    public static String[][] tableAnnotationProcessor (Field field){
+    public static String[][] tableAnnotationProcessor (Field field, BufferedReader br){
         Table table = field.getDeclaredAnnotation(Table.class);
         int rowCount = table.rows();
         int columnCount = table.columns();
         String tableElements[][] = new String[rowCount][columnCount];
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
             for (int i = 0; i < rowCount; i++) {
                 for (int j = 0; j < columnCount; j++) {
                     System.out.println("Enter a value for " + table.columnHeadings()[j]);

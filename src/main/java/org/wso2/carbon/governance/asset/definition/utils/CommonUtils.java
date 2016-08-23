@@ -41,7 +41,7 @@ public class CommonUtils {
     }
 
     public static boolean isFieldPresent (Class<?> type,String fieldName){
-        return getFieldsNameList(getAllFields(new ArrayList<>(), type)).contains(fieldName);
+        return getFieldsNameList(getAllFields(new ArrayList<Field>(), type)).contains(fieldName);
     }
 
     private static List<String> getFieldsNameList(List<Field> fields){

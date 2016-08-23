@@ -28,22 +28,22 @@ import org.wso2.carbon.governance.asset.definition.annotations.Type;
 @Type (name = "Service", mediaType = "vnd.wso2.service")
 public abstract class Service extends org.wso2.carbon.governance.asset.definition.types.Type {
 
-    @Group(name="overview", fields = {"name","versio","description"})
+    @Group(name="overview", fields = {"name","version","description"})
     @Required(true)
-    @TextField(name = "name")
+    @TextField(label = "name")
     private String name;
-    @TextField(name = "version")
+    @TextField(label = "version")
     private String version;
-    @TextArea(name = "description")
+    @TextArea(label = "description")
     private String description;
 
 
-    @TextField(name = "scopes")
+    @TextField(label = "scopes")
     private String scopes;
 
     @Required(true)
     @RegEx(expression = "^([0-9]|[0-1][0-8])?$")
-    @TextField(name = "test")
+    @TextField(label = "test")
     private String test;
     /*@TextField(name = "docLinks", label = "Doc Links")
     private String[] docLinks;*/

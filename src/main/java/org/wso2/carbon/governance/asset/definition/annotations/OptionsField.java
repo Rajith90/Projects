@@ -28,6 +28,5 @@ import javax.validation.Constraint;
 @Retention (RetentionPolicy.RUNTIME)
 public @interface OptionsField {
     String label() default "";
-    String name();
     String[] values();
 }

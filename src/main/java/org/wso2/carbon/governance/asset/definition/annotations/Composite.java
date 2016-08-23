@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.governance.asset.definition.annotations;
 
-public @interface MediaType {
-    String value();
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention (RetentionPolicy.RUNTIME)
+public @interface Composite {
+
 }

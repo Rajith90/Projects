@@ -7,6 +7,7 @@
     <groupId>org.wso2.carbon.governance</groupId>
     <artifactId>org.wso2.carbon.governance.asset.definition</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <build>
         <pluginManagement>

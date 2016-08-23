@@ -24,7 +24,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention (RetentionPolicy.RUNTIME)
 public @interface TextField {
     String label() default "";
-    String name();
     boolean required() default false;
 
 }
