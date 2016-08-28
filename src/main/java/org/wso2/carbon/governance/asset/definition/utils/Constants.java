@@ -17,6 +17,9 @@
  */
 package org.wso2.carbon.governance.asset.definition.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
     public static final Class STRING_CLASS = String.class;
     public static final Class STRING_ARRAY_CLASS = String[].class;
@@ -26,5 +29,8 @@ public class Constants {
     public static final String OPTIONS_FIELD_ANNOTATION = "OptionsField";
     public static final String TABLE_ANNOTATION = "Table";
     public static  final String GROUP_ANNOTATION = "Group";
+    public static final List<String> PRIMITIVE_TYPES = Arrays.asList("int", "float", "double", "boolean", "short",
+            "byte", "long", "char","String", "Object", "Integer", "Float", "Double", "Character", "Boolean", "Short, "
+                    + "Byte", "Long", "Date", "Enum", "Document");
 
 }

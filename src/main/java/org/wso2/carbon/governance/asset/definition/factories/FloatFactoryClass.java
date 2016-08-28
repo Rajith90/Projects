@@ -15,13 +15,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.wso2.carbon.governance.asset.definition.factories;
 
-package org.wso2.carbon.governance.asset.definition.annotations;
+public class FloatFactoryClass implements BaseFactoryClass<Float>{
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention (RetentionPolicy.RUNTIME)
-public @interface Composite {
-
+    @Override
+    public Float convertToType(Object value) {
+        if(value instanceof String){
+            return Float.parseFloat(value.toString());
+        } else if (value instanceof char[]){
+            return Float.parseFloat(new String((char[]) value));
+        } else {
+            return (float)value;
+        }
+    }
 }

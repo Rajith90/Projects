@@ -15,13 +15,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.wso2.carbon.governance.asset.definition.types;
 
-package org.wso2.carbon.governance.asset.definition.annotations;
+public class Contact {
+    private enum Owner {Technical_Owner, Business_Owner}
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention (RetentionPolicy.RUNTIME)
-public @interface TextArea {
-    String displayName() default "";
+    public Owner owner;
+    public String contactNo;
 }

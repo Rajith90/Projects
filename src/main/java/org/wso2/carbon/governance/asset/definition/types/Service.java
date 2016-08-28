@@ -25,27 +25,35 @@ import org.wso2.carbon.governance.asset.definition.annotations.TextArea;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 import org.wso2.carbon.governance.asset.definition.annotations.Type;
 
-@Type (name = "Service", mediaType = "vnd.wso2.service")
-public abstract class Service extends org.wso2.carbon.governance.asset.definition.types.Type {
+import java.util.List;
 
-    @Group(name="overview", fields = {"name","version","description"})
-    @Required(true)
-    @TextField(label = "name")
-    private String name;
-    @TextField(label = "version")
-    private String version;
-    @TextArea(label = "description")
-    private String description;
+@Type (displayName = "Service", mediaType = "vnd.wso2.service")
+public abstract class Service implements org.wso2.carbon.governance.asset.definition.types.Type {
+
+    public List<Integer> a;
+    @Group(displayName ="overview")
+    @Required()
+    @TextField(displayName = "displayName")
+    public String name;
+
+    @Group(displayName ="overview")
+    @TextField(displayName = "version")
+    @RegEx(expression = "^((\\d+\\.)(\\d+\\.)(\\d+))?$")
+    public String version;
+
+    @Group(displayName ="overview")
+    @TextArea(displayName = "description")
+    public String description;
 
 
-    @TextField(label = "scopes")
-    private String scopes;
+    @TextField(displayName = "scopes")
+    public String scopes;
 
-    @Required(true)
+    /*@Required(true)
     @RegEx(expression = "^([0-9]|[0-1][0-8])?$")
-    @TextField(label = "test")
-    private String test;
-    /*@TextField(name = "docLinks", label = "Doc Links")
+    @TextField(displayName = "test")
+    private String test;*/
+    /*@TextField(displayName = "docLinks", displayName = "Doc Links")
     private String[] docLinks;*/
 
     public String getName() {
@@ -80,18 +88,11 @@ public abstract class Service extends org.wso2.carbon.governance.asset.definitio
         this.scopes = scopes;
     }
 
-    public String getTest() {
-        return test;
+    public List<Integer> getA() {
+        return a;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setA(List<Integer> a) {
+        this.a = a;
     }
-/*public String[] getDocLinks() {
-        return docLinks;
-    }
-
-    public void setDocLinks(String[] docLinks) {
-        this.docLinks = docLinks;
-    }*/
 }

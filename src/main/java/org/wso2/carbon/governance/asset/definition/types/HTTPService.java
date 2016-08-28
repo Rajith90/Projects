@@ -21,20 +21,25 @@ import org.wso2.carbon.governance.asset.definition.annotations.Type;
 import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 
-@Type (name = "Rest Service", mediaType = "vnd.wso2.restservice")
+@Type (displayName = "Rest Service", mediaType = "vnd.wso2.restservice")
 public class HTTPService extends Service{
-    @TextField(label = "context")
-    private String context;
-    @TextField( label = "Wadl URL")
-    private String wadl;
-    @TextField( label = "Swagger URL")
-    private String swagger;
-    @OptionsField (label = "transportProtocols", values = {"HTTP", "HTTPS", "SMTP"})
-    private String transportProtocol ;
-    @OptionsField(label = "messageFormats", values =  {"Soap 1.1", "Soap 1.2", "XML", "JSON"})
-    private String messageFormat ;
-    @OptionsField(label = "contactValues", values = {"Technical Owner", "Business Owner"})
-    private String contactValues ;
+    @TextField(displayName = "context")
+    public String context;
+
+    @TextField( displayName = "Wadl URL")
+    public String wadl;
+
+    @TextField( displayName = "Swagger URL")
+    public String swagger;
+
+    @OptionsField (displayName = "transportProtocols", values = {"HTTP", "HTTPS", "SMTP"})
+    public String transportProtocol ;
+
+    @OptionsField(displayName = "messageFormats", values =  {"Soap 1.1", "Soap 1.2", "XML", "JSON"})
+    public String messageFormat ;
+
+    @OptionsField(displayName = "contactValues", values = {"Technical Owner", "Business Owner"})
+    public String contactValues ;
 
     public String getContext() {
         return context;

@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.governance.asset.definition.test;
 
-import org.junit.Test;
+/*import org.junit.Test;
 import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 
@@ -28,7 +28,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;*/
 
 public class OptionFieldValidationUnitTest {
 
@@ -44,8 +44,4 @@ public class OptionFieldValidationUnitTest {
     }*/
 }
 
-class Example {
-    @OptionsField( label = "", values = {})
-    private int country;
 
-}

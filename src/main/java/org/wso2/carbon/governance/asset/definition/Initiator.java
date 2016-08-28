@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.governance.asset.definition;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import jdk.nashorn.internal.scripts.JS;
+import org.json.JSONObject;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -25,6 +29,8 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import org.wso2.carbon.governance.asset.definition.annotations.Type;
+import org.wso2.carbon.governance.asset.definition.factories.BaseFactoryClass;
+import org.wso2.carbon.governance.asset.definition.types.SoapService;
 import org.wso2.carbon.governance.asset.definition.utils.AssetDefinitionValidator;
 import org.wso2.carbon.governance.asset.definition.utils.CommonUtils;
 import org.wso2.carbon.governance.asset.definition.utils.InputProcessor;
@@ -32,6 +38,7 @@ import org.wso2.carbon.governance.asset.definition.utils.InputProcessor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -42,11 +49,20 @@ public class Initiator {
 
     private static final String TypeDefinitionsPath = "org.wso2.carbon.governance.asset.definition.types";
     public static HashMap<String, Class> assetDefinitions = new HashMap<String, Class>();
+    public static HashMap<Class, BaseFactoryClass> baseFactoryClassHashMap = new HashMap<>();
 
     public static void main(String[] args) {
         try {
 
             readTypeDefinitions();
+            /*String jsonInString = "{'name' : 'Soap1','version' : '2.3.4', namespace : 'www.wso2.com', "
+                    + "'transportProtocol': 'HTTP12', 'date' : '2016-02-23',"
+                    + "docs : [{'docType' : 'PDF', 'url' : 'www.pdf.com', 'comment' : 'test comment'}]}";
+            JSONObject object = new JSONObject(jsonInString);
+
+            Gson gson = new Gson();
+            org.wso2.carbon.governance.asset.definition.types.Type sp = gson.fromJson(jsonInString, SoapService
+            .class);*/
             org.wso2.carbon.governance.asset.definition.types.Type assetDetails = InputProcessor
                     .readInputs(assetDefinitions);
             AssetInstance assetInstance = new AssetInstance(assetDetails);
@@ -69,6 +85,23 @@ public class Initiator {
         }
     }
 
+    private static void readFactoryClasses(){
+        List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
+        classLoadersList.add(ClasspathHelper.contextClassLoader());
+        classLoadersList.add(ClasspathHelper.staticClassLoader());
+
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
+                .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(""))));
+        Set<Class<? extends BaseFactoryClass>> classes = reflections
+                .getSubTypesOf(BaseFactoryClass.class);
+        for (Class factoryClass : classes) {
+            System.out.println(((ParameterizedType) factoryClass
+                    .getGenericSuperclass()).getActualTypeArguments()[0]);
+        }
+    }
+
     private static void readTypeDefinitions() {
 
         List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
@@ -83,7 +116,7 @@ public class Initiator {
                 .getSubTypesOf(org.wso2.carbon.governance.asset.definition.types.Type.class);
         for (Class extended : classes) {
             if (!Modifier.isAbstract(extended.getModifiers()) && extended.getAnnotation(Type.class) != null
-                    && AssetDefinitionValidator.validateFields(extended)) {
+                    /*&& AssetDefinitionValidator.validateFields(extended)*/) {
                 assetDefinitions.put(extended.getSimpleName(), extended);
             }
 

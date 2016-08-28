@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class AnnotationProcessor {
 
@@ -42,13 +43,13 @@ public class AnnotationProcessor {
 
     }
 
-    public static boolean requiredFieldAnnotationProcessor( String value) {
-        if(value == null || value.isEmpty()){
-            System.out.println("Required Field. Please Enter a value");
-            return false;
-        }
-        return true;
+    public static void enumFieldAnnotationProcessor(Field field){
+        Class<Enum> enumField = (Class<Enum>) field.getType();
+        System.out.println("Please select one value from below list");
+        System.out.println(Arrays.asList(enumField.getEnumConstants()));
+
     }
+
 
     public static String[][] tableAnnotationProcessor (Field field, BufferedReader br){
         Table table = field.getDeclaredAnnotation(Table.class);

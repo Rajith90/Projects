@@ -16,12 +16,17 @@
  * under the License.
  */
 
-package org.wso2.carbon.governance.asset.definition.annotations;
+package org.wso2.carbon.governance.asset.definition.types;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import org.w3c.dom.Document;
 
-@Retention (RetentionPolicy.RUNTIME)
-public @interface TextArea {
-    String displayName() default "";
+@org.wso2.carbon.governance.asset.definition.annotations.Type (mediaType = "vnd.wso2"
+        + ".policy")
+public class Policy implements Type {
+
+    public String name;
+
+    public String version;
+
+    public Document content;
 }

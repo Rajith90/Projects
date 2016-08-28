@@ -18,15 +18,12 @@
 
 package org.wso2.carbon.governance.asset.definition.annotations;
 
-import org.wso2.carbon.governance.asset.definition.validators.OptionFieldValidator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import javax.validation.Constraint;
 
-//@Constraint (validatedBy = { OptionFieldValidator.class})
 @Retention (RetentionPolicy.RUNTIME)
 public @interface OptionsField {
-    String label() default "";
+    String displayName() default "";
     String[] values();
 }

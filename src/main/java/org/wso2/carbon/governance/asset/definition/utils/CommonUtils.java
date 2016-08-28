@@ -53,7 +53,7 @@ public class CommonUtils {
     }
 
     public static boolean validateField(Field field, String value) {
-        boolean isValidField = false;
+        boolean isValidField = true;
         for (Annotation annotation : field.getDeclaredAnnotations()){
             if(annotation.annotationType().equals(Required.class)){
                 isValidField = AnnotationValidator.requiredFieldAnnotationValidator(value);
@@ -76,6 +76,9 @@ public class CommonUtils {
              if (annotation.annotationType().equals(OptionsField.class)) {
                 AnnotationProcessor.optionFieldAnnotationProcessor(field);
             }
+        }
+        if(field.getType().isEnum()){
+            AnnotationProcessor.enumFieldAnnotationProcessor(field);
         }
     }
 

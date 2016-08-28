@@ -57,17 +57,17 @@ public class AssetDefinitionValidator {
                                 .STRING_DOUBLE_ARRAY_CLASS)) {
                     System.err.println("Table should be declared as String[][] Type");
                     isValid = false;
-                } else if (annotationName.equals(Constants.GROUP_ANNOTATION)) {
+                } /*else if (annotationName.equals(Constants.GROUP_ANNOTATION)) {
                     Group group = field.getDeclaredAnnotation(Group.class);
                     for (String groupedElement : group.fields()) {
                         if (!CommonUtils.isFieldPresent(assetDefinition, groupedElement)) {
                             isValid = false;
                             System.err.println("Asset Definition " + assetDefinition.getSimpleName() + " does not "
-                                    + "contain a field with name " + groupedElement);
+                                    + "contain a field with displayName " + groupedElement);
                             break;
                         }
                     }
-                } else {
+                } */else {
                     isValid = true;
                 }
                 if(!isValid){

@@ -15,10 +15,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.governance.asset.definition.annotations;
+package org.wso2.carbon.governance.asset.definition.factories;
 
-public @interface OptionsTextField {
-    String label() default "";
-    String name();
-    String[] values();
+import org.wso2.carbon.governance.asset.definition.types.DocLink;
+
+public class DoubleFactoryClass implements BaseFactoryClass<Double> {
+
+    @Override public Double convertToType(Object value) {
+        if (value instanceof String) {
+            return Double.parseDouble(value.toString());
+        } else if (value instanceof char[]) {
+            return Double.parseDouble(new String((char[]) value));
+        } else {
+            return (double) value;
+        }
+    }
 }

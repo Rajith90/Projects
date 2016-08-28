@@ -18,28 +18,38 @@
 
 package org.wso2.carbon.governance.asset.definition.types;
 
-import org.wso2.carbon.governance.asset.definition.annotations.Composite;
 import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
 import org.wso2.carbon.governance.asset.definition.annotations.Required;
-import org.wso2.carbon.governance.asset.definition.annotations.Table;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 import org.wso2.carbon.governance.asset.definition.annotations.Type;
 
-@Type (name = "Soap Service", mediaType = "vnd.wso2.soapservice")
+import java.util.Date;
+import java.util.List;
+
+@Type (displayName = "Soap Service", mediaType = "vnd.wso2.soapservice")
 public class SoapService extends Service {
-    @Required(value = true)
-    @TextField (label = "namespace")
-    private String namespace;
-    @Composite
-    private EndPoint endPoint;
-    @OptionsField(label = "transportProtocols", values = {"HTTP", "HTTPS", "SMTP"})
-    private String transportProtocol  ;
-    @OptionsField(label = "messageFormats", values = {"Soap 1.1", "Soap 1.2", "XML", "JSON"})
-    private String messageFormat ;
-    @OptionsField(label = "contactValues", values = {"Technical Owner", "Business Owner"})
-    private String contactValue ;
-    @Table(label = "Doc Links", columns = 3, rows =1, columnHeadings = {"Document Type", "URL", "Comment"})
-    private String docLinks[][] = new String[2][3];
+    private enum TransportProtocols {
+        HTTP, HTTPS, SMTP
+    }
+    @Required()
+    @TextField (displayName = "namespace")
+    public String namespace;
+
+
+    public List<EndPoint> endPoint;    // composition (related to association)
+
+    public Policy policy;               // aggregation (related to association)
+
+
+    public TransportProtocols transportProtocol ;
+
+    @OptionsField(displayName = "messageFormats", values = {"Soap 1.1", "Soap 1.2", "XML", "JSON"})
+    public String messageFormat ;
+
+    public List<Contact> contacts;      // aggregation
+
+
+    public List<DocLink> docs;
 
 
     public String getNamespace() {
@@ -50,11 +60,11 @@ public class SoapService extends Service {
         this.namespace = namespace;
     }
 
-    public String getTransportProtocol() {
+    public TransportProtocols getTransportProtocol() {
         return transportProtocol;
     }
 
-    public void setTransportProtocol(String transportProtocol) {
+    public void setTransportProtocol(TransportProtocols transportProtocol) {
         this.transportProtocol = transportProtocol;
     }
 
@@ -66,31 +76,30 @@ public class SoapService extends Service {
         this.messageFormat = messageFormat;
     }
 
-    public String getContactValue() {
-        return contactValue;
+    public List<Contact> getContactValue() {
+        return contacts;
     }
 
-    public void setContactValue(String contactValue) {
-        this.contactValue = contactValue;
+    public void setContactValue(List<Contact> contactValue) {
+        this.contacts = contactValue;
     }
 
-    public String[][] getDocLinks() {
-        return docLinks;
-    }
-
-    public void setDocLinks(String[][] docLinks) {
-        this.docLinks = docLinks;
-    }
-
-    public EndPoint getEndPoint() {
+    public List<EndPoint> getEndPoint() {
         return endPoint;
     }
 
-    public void setEndPoint(EndPoint endPoint) {
+    public void setEndPoint(List<EndPoint> endPoint) {
         this.endPoint = endPoint;
     }
 
 
+    public List<DocLink> getDocs() {
+        return docs;
+    }
+
+    public void setDocs(List<DocLink> docs) {
+        this.docs = docs;
+    }
 }
 
 

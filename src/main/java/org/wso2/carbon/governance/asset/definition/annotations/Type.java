@@ -23,7 +23,6 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Type {
-    String name();
+    String displayName() default "";
     String mediaType();
-    String shortName() default "";
 }

@@ -15,13 +15,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.wso2.carbon.governance.asset.definition.factories;
 
-package org.wso2.carbon.governance.asset.definition.annotations;
+public interface BaseFactoryClass<T> {
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+    public T convertToType(Object value);
 
-@Retention (RetentionPolicy.RUNTIME)
-public @interface TextArea {
-    String displayName() default "";
 }

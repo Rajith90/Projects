@@ -22,7 +22,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention (RetentionPolicy.RUNTIME)
 public @interface Group {
-    String name();
-    String label() default "";
-    String[] fields();
+    String displayName() default "";
 }

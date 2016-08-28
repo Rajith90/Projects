@@ -15,13 +15,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.wso2.carbon.governance.asset.definition.factories;
 
-package org.wso2.carbon.governance.asset.definition.annotations;
+public class IntFactoryClass implements BaseFactoryClass<Integer>{
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention (RetentionPolicy.RUNTIME)
-public @interface TextArea {
-    String displayName() default "";
+    @Override
+    public Integer convertToType(Object value) {
+        if(value instanceof String){
+            return Integer.parseInt(value.toString());
+        } else if (value instanceof char[]){
+            return Integer.parseInt(new String((char[])value));
+        } else {
+            return (int)value;
+        }
+    }
 }
