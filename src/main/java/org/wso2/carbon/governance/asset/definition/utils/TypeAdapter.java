@@ -135,7 +135,6 @@ public class TypeAdapter {
             field.set(asset, array);
             //PropertyUtils.setProperty(asset, field.getName(), Float.parseFloat((String) object));
         } else {
-            array = Array.newInstance(genericClass, 1);
             Array.set(array, 0, value);
             field.set(asset, array);
         }

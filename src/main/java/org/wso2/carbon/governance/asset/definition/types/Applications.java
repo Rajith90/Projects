@@ -28,12 +28,11 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @org.wso2.carbon.governance.asset.definition.annotations.Type ("vnd.wso2.application")
-public class Applications implements Type{
+public class Applications extends SoapService{
 
     private enum Category{
         TOOLS,GAMES,SCIENTIFIC
     }
-
 
     @NotNull
     private String name;
@@ -45,14 +44,15 @@ public class Applications implements Type{
 
     private boolean isFree;
 
+    @Pattern (regexp = "^((\\d+\\.)(\\d+\\.)(\\d+))?$")
     private String version;
 
     private Category category;
 
     private Date lastUpdated;
 
-    @Size(max = 3)
-    private List<DocLink> docLinks;
+    @Size(max = 2)
+    private DocLink[] docLinks;
 
     private List<Contact> contacts;
 

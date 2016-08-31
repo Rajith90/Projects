@@ -19,7 +19,6 @@
 package org.wso2.carbon.governance.asset.definition.utils;
 
 import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
-import org.wso2.carbon.governance.asset.definition.annotations.RegEx;
 import org.wso2.carbon.governance.asset.definition.types.Type;
 
 import java.lang.reflect.Field;
@@ -70,9 +69,10 @@ public class AnnotationValidator {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<Type>> violations = validator.validate(assetInstance);
-        for(ConstraintViolation constraintViolation : violations){
-            System.err.println("The value " +constraintViolation.getInvalidValue() +" does not satisfy the constraint"
-                    + constraintViolation.getMessage());
+        for (ConstraintViolation constraintViolation : violations) {
+            System.err.println(
+                    "The value " + constraintViolation.getInvalidValue() + " does not satisfy the constraint : "
+                            + constraintViolation.getMessage());
         }
         if(violations.size() ==0){
             return true;

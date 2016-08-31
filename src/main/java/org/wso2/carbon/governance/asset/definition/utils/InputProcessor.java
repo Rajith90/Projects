@@ -24,15 +24,18 @@ import org.wso2.carbon.governance.asset.definition.types.Type;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
+import java.security.Signature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.Size;
 
 public class InputProcessor {
 
@@ -69,22 +72,33 @@ public class InputProcessor {
                         //field.set(assetInstance, table);
                         //PropertyUtils.setProperty(assetInstance, field.getName(), table);
                     } else if (field.getType().isArray()) {
-                        Class genericClass = field.getType().getComponentType();
-                        if (Type.class.isAssignableFrom(genericClass) || !Constants.PRIMITIVE_TYPES.contains
-                                (genericClass.getSimpleName())) {
-                            System.out.println("#######   " + genericClass.getSimpleName() + " Details #######");
-                            Object compositeAsset = buildCompositeField(genericClass, br);
-                            TypeAdapter.assignToFieldsBasedOnType(assetInstance, field, compositeAsset);
-                            System.out.println("##################################################################");
-                        } else {
-                            System.out.println("Please enter value for " + field.getName());
-                            String enteredValue;
-
-                            do {
-                                enteredValue = br.readLine();
-                            } while (!CommonUtils.validateField(field, enteredValue));
-                            TypeAdapter.assignToFieldsBasedOnType(assetInstance, field, enteredValue);
+                        Size size = field.getAnnotation(Size.class);
+                        int arraySize = 1;
+                        if(size != null){
+                            arraySize = size.max();
                         }
+                        Class genericClass = field.getType().getComponentType();
+                        Object arrayObject = Array.newInstance(genericClass, arraySize);
+                        //for(int i=0; i< arraySize ; i++) {
+                            if (Type.class.isAssignableFrom(genericClass) || !Constants.PRIMITIVE_TYPES
+                                    .contains(genericClass.getSimpleName())) {
+                                System.out.println("#######   " + genericClass.getSimpleName() + " Details #######");
+                                Object compositeAsset = buildCompositeField(genericClass, br);
+                                //arrayObject[i] = compositeAsset;
+                                TypeAdapter.assignToFieldsBasedOnType(assetInstance, field, compositeAsset);
+                                System.out.println("##################################################################");
+                            } else {
+                                System.out.println("Please enter value for " + field.getName());
+                                String enteredValue;
+
+                                do {
+                                    enteredValue = br.readLine();
+                                } while (!CommonUtils.validateField(field, enteredValue));
+                                //Array.set(arrayObject,i,enteredValue);
+                                TypeAdapter.assignToFieldsBasedOnType(assetInstance, field, enteredValue);
+                            }
+                        //}
+                        //TypeAdapter.assignToFieldsBasedOnType(assetDefinition,field,arrayObject);
                         // field.
                         /*String enteredValue;
                         System.out.println("#################### " + field.getType().getComponentType());

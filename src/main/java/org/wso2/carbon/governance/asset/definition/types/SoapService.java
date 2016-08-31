@@ -34,7 +34,7 @@ public class SoapService extends Service {
     private String version;
 
     @NotNull
-    @TextField (label = "Namespace for Service")
+    @TextField (label = "Namespace for Soap Service")
     private String namespace;
 
     // association
@@ -50,8 +50,7 @@ public class SoapService extends Service {
     // composition
     private List<Contact> contacts;
 
-    @Size(max = 3)
-    private DocLink[] docs;
+    private List<DocLink> docLinks;
 
     public enum TransportProtocols {
         HTTP, HTTPS, SMTP;
