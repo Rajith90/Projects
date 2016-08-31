@@ -21,15 +21,15 @@ import org.wso2.carbon.governance.asset.definition.annotations.Type;
 import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 
-@Type (displayName = "Rest Service", mediaType = "vnd.wso2.restservice")
+@Type ("vnd.wso2.restservice")
 public class HTTPService extends Service{
-    @TextField(displayName = "context")
+    @TextField(label = "context")
     public String context;
 
-    @TextField( displayName = "Wadl URL")
+    @TextField( label = "Wadl URL")
     public String wadl;
 
-    @TextField( displayName = "Swagger URL")
+    @TextField( label = "Swagger URL")
     public String swagger;
 
     @OptionsField (displayName = "transportProtocols", values = {"HTTP", "HTTPS", "SMTP"})

@@ -18,87 +18,54 @@
 
 package org.wso2.carbon.governance.asset.definition.types;
 
-import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
-import org.wso2.carbon.governance.asset.definition.annotations.Required;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 import org.wso2.carbon.governance.asset.definition.annotations.Type;
 
-import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-@Type (displayName = "Soap Service", mediaType = "vnd.wso2.soapservice")
+@Type ("vnd.wso2.soapservice")
 public class SoapService extends Service {
-    private enum TransportProtocols {
-        HTTP, HTTPS, SMTP
-    }
-    @Required()
-    @TextField (displayName = "namespace")
-    public String namespace;
 
+    @TextField("Version of Soap Service")
+    @Pattern (regexp = "^((\\d+\\.)(\\d+\\.)(\\d+))?$")
+    private String version;
 
-    public List<EndPoint> endPoint;    // composition (related to association)
+    @NotNull
+    @TextField (label = "Namespace for Service")
+    private String namespace;
 
-    public Policy policy;               // aggregation (related to association)
+    // association
+    private List<Endpoint> endpoint;
 
+    // association
+    private Policy policy;
 
-    public TransportProtocols transportProtocol ;
+    private TransportProtocols transportProtocol;
 
-    @OptionsField(displayName = "messageFormats", values = {"Soap 1.1", "Soap 1.2", "XML", "JSON"})
-    public String messageFormat ;
+    private AuthenticationMechanism authenticationMechanism;
 
-    public List<Contact> contacts;      // aggregation
+    // composition
+    private List<Contact> contacts;
 
+    @Size(max = 3)
+    private DocLink[] docs;
 
-    public List<DocLink> docs;
+    public enum TransportProtocols {
+        HTTP, HTTPS, SMTP;
 
-
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
     }
 
-    public TransportProtocols getTransportProtocol() {
-        return transportProtocol;
-    }
+    public enum AuthenticationMechanism {
+        OPENID("Open Id"), INFOCARD("Info card"), CLIENTCERTIFICATES("Client Certifcates"), BASICAUTH(
+                "HTTPS Basic Authentication"), IPFILTERING("IP Address Filtering");
+        private String mechanism;
 
-    public void setTransportProtocol(TransportProtocols transportProtocol) {
-        this.transportProtocol = transportProtocol;
-    }
-
-    public String getMessageFormat() {
-        return messageFormat;
-    }
-
-    public void setMessageFormat(String messageFormat) {
-        this.messageFormat = messageFormat;
-    }
-
-    public List<Contact> getContactValue() {
-        return contacts;
-    }
-
-    public void setContactValue(List<Contact> contactValue) {
-        this.contacts = contactValue;
-    }
-
-    public List<EndPoint> getEndPoint() {
-        return endPoint;
-    }
-
-    public void setEndPoint(List<EndPoint> endPoint) {
-        this.endPoint = endPoint;
-    }
-
-
-    public List<DocLink> getDocs() {
-        return docs;
-    }
-
-    public void setDocs(List<DocLink> docs) {
-        this.docs = docs;
+        private AuthenticationMechanism(String mechanism){
+            this.mechanism = mechanism;
+        }
     }
 }
 

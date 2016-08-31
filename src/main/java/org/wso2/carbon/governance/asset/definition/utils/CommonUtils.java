@@ -18,31 +18,59 @@
 
 package org.wso2.carbon.governance.asset.definition.utils;
 
+import org.wso2.carbon.governance.asset.definition.annotations.FieldType;
 import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
 import org.wso2.carbon.governance.asset.definition.annotations.RegEx;
 import org.wso2.carbon.governance.asset.definition.annotations.Required;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class CommonUtils {
 
-    public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
+    public static Map<String,Field> getAllFields(Map<String,Field> fields, Class<?> type) {
 
         if (type.getSuperclass() != null) {
             fields = getAllFields(fields, type.getSuperclass());
         }
-        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+        for (Field field : Arrays.asList(type.getDeclaredFields())) {
+            fields.put(field.getName(),field);
+        }
+//        BeanInfo info = null;
+//        try {
+//            info = Introspector.getBeanInfo(type);
+//
+//            PropertyDescriptor[] props = info.getPropertyDescriptors();
+//            for (PropertyDescriptor pd : props) {
+//                String pdName = pd.getName();
+//                Method getter = pd.getReadMethod();
+//                System.out.println(pdName);
+//
+//            }
+//        }catch (IntrospectionException e) {
+//                e.printStackTrace();
+//            }
+
+
+
 
         return fields;
     }
 
-    public static boolean isFieldPresent (Class<?> type,String fieldName){
+    /*public static boolean isFieldPresent (Class<?> type,String fieldName){
         return getFieldsNameList(getAllFields(new ArrayList<Field>(), type)).contains(fieldName);
-    }
+    }*/
 
     private static List<String> getFieldsNameList(List<Field> fields){
         List<String> fieldNameList = new ArrayList<>();
@@ -55,11 +83,11 @@ public class CommonUtils {
     public static boolean validateField(Field field, String value) {
         boolean isValidField = true;
         for (Annotation annotation : field.getDeclaredAnnotations()){
-            if(annotation.annotationType().equals(Required.class)){
+            if(annotation.annotationType().equals(NotNull.class)){
                 isValidField = AnnotationValidator.requiredFieldAnnotationValidator(value);
             } else if (annotation.annotationType().equals(OptionsField.class)) {
                 isValidField = AnnotationValidator.optionsFieldAnnotationValidator(field, value);
-            } else if(annotation.annotationType().equals(RegEx.class)) {
+            } else if(annotation.annotationType().equals(Pattern.class)) {
                 isValidField = AnnotationValidator.regexAnnotationValidator(field, value);
             } else {
                 isValidField = true;

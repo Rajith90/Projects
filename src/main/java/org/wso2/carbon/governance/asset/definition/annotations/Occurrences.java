@@ -16,17 +16,8 @@
  * under the License.
  */
 
-package org.wso2.carbon.governance.asset.definition.types;
+package org.wso2.carbon.governance.asset.definition.annotations;
 
-import org.w3c.dom.Document;
-
-@org.wso2.carbon.governance.asset.definition.annotations.Type ("vnd.wso2"
-        + ".policy")
-public class Policy implements Type {
-
-    public String name;
-
-    public String version;
-
-    public Document content;
+public @interface Occurrences {
+    int numOfTimes() default 1;
 }

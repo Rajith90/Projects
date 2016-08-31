@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.governance.asset.definition.types;
 
-@org.wso2.carbon.governance.asset.definition.annotations.Type (displayName = "Type", mediaType = "vnd.wso2.type")
+@org.wso2.carbon.governance.asset.definition.annotations.Type ( "vnd.wso2.type")
 public interface Type {
 
 

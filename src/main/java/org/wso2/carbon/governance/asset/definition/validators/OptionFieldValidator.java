@@ -25,13 +25,13 @@
 //
 //public class OptionFieldValidator implements ConstraintValidator<OptionsField,Object>{
 //
-//    private Object displayName;
+//    private Object label;
 //    @Override public void initialize(OptionsField optionsField) {
-//        this.displayName = optionsField.displayName();
+//        this.label = optionsField.label();
 //    }
 //
 //    @Override public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
-//        if(displayName instanceof String)
+//        if(label instanceof String)
 //            return true;
 //        return false;
 //    }

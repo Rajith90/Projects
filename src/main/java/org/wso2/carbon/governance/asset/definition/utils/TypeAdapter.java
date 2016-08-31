@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.Size;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -40,6 +41,7 @@ public class TypeAdapter {
     public static void assignToFieldsBasedOnType(Object asset, Field field, Object object)
             throws IllegalArgumentException {
         if (object != null && !object.toString().isEmpty()) {
+            field.setAccessible(true);
             try {
                 if (field.getType().isAssignableFrom(int.class)) {
                     field.setInt(asset, Integer.parseInt(object.toString()));
@@ -64,27 +66,37 @@ public class TypeAdapter {
                     //PropertyUtils.setProperty(asset, field.getName(), Byte.valueOf((String) object));
                 } else if (field.getType().isEnum()) {
                     Enum<?> convertedValue = Enum.valueOf((Class<Enum>) field.getType(), object.toString());
+                    //Convert.ChangeType(convertedValue, Enum.GetUnderlyingType(convertedValue.GetType()));
+
+                    System.out.println(convertedValue.name() + " "+ convertedValue.toString());
                     field.set(asset, convertedValue);
                 } else if (field.getType().isArray()) {
-                    Object array = Array.newInstance(field.getType().getComponentType(), 1);
-                    Array.set(array, 0, object);
-                    field.set(asset, array);
+                    populateArray(field, asset, object);
                 } else if (field.getType().isAssignableFrom(List.class)) {
                     List<Object> list = new ArrayList<>();
                     list.add(object);
                     field.set(asset, list);
                     // populateList(field, asset, object);
                 } else if (field.getType().isAssignableFrom(Date.class)) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
-                    Date date = sdf.parse(object.toString());
-                    field.set(asset, date);
+                    String[] formatStrings = {"M/y", "M/d/y", "M-d-y", "dd-mm-yyyy", "dd/mm/yyyy"};
+                    for(String formatString : formatStrings) {
+                        try {
+
+                            SimpleDateFormat sdf = new SimpleDateFormat(formatString);
+                            Date date = sdf.parse(object.toString());
+                            field.set(asset, date);
+                        } catch (ParseException e) {
+                            //do nothing
+                        }
+                    }
+
+
                 } else if (field.getType().isAssignableFrom(Document.class)) {
                     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                     DocumentBuilder builder;
-                    try
-                    {
+                    try {
                         builder = factory.newDocumentBuilder();
-                        Document document = builder.parse( new InputSource( new StringReader( object.toString() ) ) );
+                        Document document = builder.parse(new InputSource(new StringReader(object.toString())));
                         field.set(asset, document);
                     } catch (Exception e) {
                         System.err.println(e.getMessage());
@@ -94,20 +106,39 @@ public class TypeAdapter {
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
-            } /*catch (IllegalArgumentException e){
-            System.err.println("Error while assigning value to field " + field.getName() + ". " + e.getMessage());
-            throw new Exception(e);
-        } *//*catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }*/ catch (ParseException e) {
-                e.printStackTrace();
             }
         }
 
+    }
+
+    private static void populateArray(Field field, Object asset, Object value) throws IllegalAccessException {
+
+        Class genericClass = field.getType().getComponentType();
+        int arraySize = 1;
+        if(field.isAnnotationPresent(Size.class)) {
+            Size size = field.getAnnotation(Size.class);
+            arraySize = size.max();
+        }
+        Object array = Array.newInstance(genericClass, arraySize);
+        if (genericClass.isAssignableFrom(int.class)) {
+            Array.set(array, 0, Integer.parseInt(value.toString()));
+            field.set(asset, array);
+        } else if (genericClass.isAssignableFrom(long.class)) {
+            Array.set(array, 0, Long.parseLong(value.toString()));
+            field.set(asset, array);
+        } else if (genericClass.isAssignableFrom(double.class)) {
+            Array.set(array, 0, Double.parseDouble(value.toString()));
+            field.set(asset, array);
+            //PropertyUtils.setProperty(asset, field.getName(), Double.parseDouble((String) object));
+        } else if (genericClass.isAssignableFrom(float.class)) {
+            Array.set(array, 0, Float.parseFloat(value.toString()));
+            field.set(asset, array);
+            //PropertyUtils.setProperty(asset, field.getName(), Float.parseFloat((String) object));
+        } else {
+            array = Array.newInstance(genericClass, 1);
+            Array.set(array, 0, value);
+            field.set(asset, array);
+        }
     }
 
     private static void populateList(Field field, Object asset, Object value) throws IllegalAccessException {

@@ -1,4 +1,4 @@
-/*
+package org.wso2.carbon.governance.asset.definition.annotations;/*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -16,11 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.governance.asset.definition.annotations;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention (RetentionPolicy.RUNTIME)
-public @interface ReadOnly {
+public @interface FieldType {
+    String group() default "";
+    String label() default "";
 }

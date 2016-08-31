@@ -19,42 +19,24 @@
 package org.wso2.carbon.governance.asset.definition.types;
 
 import org.wso2.carbon.governance.asset.definition.annotations.Group;
-import org.wso2.carbon.governance.asset.definition.annotations.RegEx;
-import org.wso2.carbon.governance.asset.definition.annotations.Required;
 import org.wso2.carbon.governance.asset.definition.annotations.TextArea;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 import org.wso2.carbon.governance.asset.definition.annotations.Type;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
-@Type (displayName = "Service", mediaType = "vnd.wso2.service")
+@Type ("vnd.wso2.service")
 public abstract class Service implements org.wso2.carbon.governance.asset.definition.types.Type {
 
-    public List<Integer> a;
-    @Group(displayName ="overview")
-    @Required()
-    @TextField(displayName = "displayName")
-    public String name;
+    @Group ("overview")
+    @NotNull
+    private String name;
 
-    @Group(displayName ="overview")
-    @TextField(displayName = "version")
-    @RegEx(expression = "^((\\d+\\.)(\\d+\\.)(\\d+))?$")
-    public String version;
+    private String version;
 
-    @Group(displayName ="overview")
-    @TextArea(displayName = "description")
-    public String description;
-
-
-    @TextField(displayName = "scopes")
-    public String scopes;
-
-    /*@Required(true)
-    @RegEx(expression = "^([0-9]|[0-1][0-8])?$")
-    @TextField(displayName = "test")
-    private String test;*/
-    /*@TextField(displayName = "docLinks", displayName = "Doc Links")
-    private String[] docLinks;*/
+    @TextArea(label = "description", group = "overview")
+    private String description;
 
     public String getName() {
         return name;
@@ -78,21 +60,5 @@ public abstract class Service implements org.wso2.carbon.governance.asset.defini
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getScopes() {
-        return scopes;
-    }
-
-    public void setScopes(String scopes) {
-        this.scopes = scopes;
-    }
-
-    public List<Integer> getA() {
-        return a;
-    }
-
-    public void setA(List<Integer> a) {
-        this.a = a;
     }
 }

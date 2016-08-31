@@ -22,31 +22,38 @@ import org.wso2.carbon.governance.asset.definition.annotations.Required;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-@org.wso2.carbon.governance.asset.definition.annotations.Type (mediaType = "vnd.wso2"
-        + ".application")
+@org.wso2.carbon.governance.asset.definition.annotations.Type ("vnd.wso2.application")
 public class Applications implements Type{
 
     private enum Category{
         TOOLS,GAMES,SCIENTIFIC
     }
-    @Required
-    public String name;
 
-    public int numOfDownloads;
 
-    public float rating;
+    @NotNull
+    private String name;
 
-    public boolean isFree;
+    private int numOfDownloads;
 
-    public String version;
+    @Max(5)
+    private float rating;
 
-    public Category category;
+    private boolean isFree;
 
-    public Date lastUpdated;
+    private String version;
 
-    public List<DocLink> docLinks;
+    private Category category;
 
-    public List<Contact> contacts;
+    private Date lastUpdated;
+
+    @Size(max = 3)
+    private List<DocLink> docLinks;
+
+    private List<Contact> contacts;
 
 }

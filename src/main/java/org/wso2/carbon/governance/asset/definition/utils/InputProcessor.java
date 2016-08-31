@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.governance.asset.definition.utils;
 
-import org.wso2.carbon.governance.asset.definition.annotations.Custom;
 import org.wso2.carbon.governance.asset.definition.annotations.Table;
 import org.wso2.carbon.governance.asset.definition.types.Type;
 
@@ -31,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +52,7 @@ public class InputProcessor {
             Constructor constructor = assetDefinition.getConstructor();
             assetInstance = (Type) constructor.newInstance();
 
-            for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetDefinition)) {
+            for (Field field : CommonUtils.getAllFields(new LinkedHashMap<>(), assetDefinition).values()) {
                 try {
 
                     if (Type.class.isAssignableFrom(field.getType())) {
@@ -69,14 +69,30 @@ public class InputProcessor {
                         //field.set(assetInstance, table);
                         //PropertyUtils.setProperty(assetInstance, field.getName(), table);
                     } else if (field.getType().isArray()) {
+                        Class genericClass = field.getType().getComponentType();
+                        if (Type.class.isAssignableFrom(genericClass) || !Constants.PRIMITIVE_TYPES.contains
+                                (genericClass.getSimpleName())) {
+                            System.out.println("#######   " + genericClass.getSimpleName() + " Details #######");
+                            Object compositeAsset = buildCompositeField(genericClass, br);
+                            TypeAdapter.assignToFieldsBasedOnType(assetInstance, field, compositeAsset);
+                            System.out.println("##################################################################");
+                        } else {
+                            System.out.println("Please enter value for " + field.getName());
+                            String enteredValue;
+
+                            do {
+                                enteredValue = br.readLine();
+                            } while (!CommonUtils.validateField(field, enteredValue));
+                            TypeAdapter.assignToFieldsBasedOnType(assetInstance, field, enteredValue);
+                        }
                         // field.
-                        String enteredValue;
+                        /*String enteredValue;
                         System.out.println("#################### " + field.getType().getComponentType());
                         do {
                             enteredValue = br.readLine();
                         } while (!CommonUtils.validateField(field, enteredValue));
-                        Object array = (Object) enteredValue;
-                        TypeAdapter.assignToFieldsBasedOnType(assetInstance, field, array);
+                        Object array =  enteredValue;
+                        TypeAdapter.assignToFieldsBasedOnType(assetInstance, field, array);*/
                     } else if (field.getType().isAssignableFrom(List.class)) {
                         ParameterizedType listType = (ParameterizedType) field.getGenericType();
                         Class<?> genericClass = (Class<?>) listType.getActualTypeArguments()[0];
@@ -184,7 +200,7 @@ public class InputProcessor {
 
                 constructor = assetDefinition.getConstructor();
                 assetInstance = constructor.newInstance();
-                for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetDefinition)) {
+                for (Field field : CommonUtils.getAllFields(new LinkedHashMap<>(), assetDefinition).values()) {
                     try {
                         if (field.isAnnotationPresent(Table.class)) {
                             String[][] table = AnnotationProcessor.tableAnnotationProcessor(field, br);
@@ -234,7 +250,7 @@ public class InputProcessor {
 
                 constructor = assetDefinition.getConstructor();
                 fieldInstance = constructor.newInstance();
-                for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetDefinition)) {
+                for (Field field : CommonUtils.getAllFields(new LinkedHashMap<>(), assetDefinition).values()) {
                     try {
                         if (field.isAnnotationPresent(Table.class)) {
                             String[][] table = AnnotationProcessor.tableAnnotationProcessor(field, br);

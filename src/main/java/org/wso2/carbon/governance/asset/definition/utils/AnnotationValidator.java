@@ -20,9 +20,16 @@ package org.wso2.carbon.governance.asset.definition.utils;
 
 import org.wso2.carbon.governance.asset.definition.annotations.OptionsField;
 import org.wso2.carbon.governance.asset.definition.annotations.RegEx;
+import org.wso2.carbon.governance.asset.definition.types.Type;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.constraints.Pattern;
 
 public class AnnotationValidator {
 
@@ -50,13 +57,28 @@ public class AnnotationValidator {
     }
 
     public static boolean regexAnnotationValidator (Field field, String value) {
-        RegEx regEx = field.getDeclaredAnnotation(RegEx.class);
-        String expression = regEx.expression();
+        Pattern regEx = field.getDeclaredAnnotation(Pattern.class);
+        String expression = regEx.regexp();
         if(!value.matches(expression)) {
             System.err.println("The provided value does not match with the regular expression " + expression);
             return false;
         }
         return true;
-
     }
+
+    public static boolean validate(Type assetInstance){
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<Type>> violations = validator.validate(assetInstance);
+        for(ConstraintViolation constraintViolation : violations){
+            System.err.println("The value " +constraintViolation.getInvalidValue() +" does not satisfy the constraint"
+                    + constraintViolation.getMessage());
+        }
+        if(violations.size() ==0){
+            return true;
+        }
+        return false;
+    }
+
+
 }

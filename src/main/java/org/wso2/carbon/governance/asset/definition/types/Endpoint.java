@@ -21,19 +21,22 @@ import org.wso2.carbon.governance.asset.definition.annotations.RegEx;
 import org.wso2.carbon.governance.asset.definition.annotations.Type;
 import org.wso2.carbon.governance.asset.definition.annotations.TextField;
 
-@Type (displayName = "EndPoint", mediaType = "vnd.wso2.endpoint")
-public class EndPoint implements org.wso2.carbon.governance.asset.definition.types.Type {
-    @TextField(displayName = "version")
-    @RegEx(expression = "^((\\d+\\.)(\\d+\\.)(\\d+))?$")
+import javax.validation.constraints.Pattern;
+
+@Type ("vnd.wso2.endpoint")
+public class Endpoint implements org.wso2.carbon.governance.asset.definition.types.Type {
+    @TextField(label = "version")
+    //@RegEx(expression = "^((\\d+\\.)(\\d+\\.)(\\d+))?$")
+    @Pattern(regexp = "^((\\d+\\.)(\\d+\\.)(\\d+))?$")
     public String version;
 
-    @TextField(displayName = "address")
+    @TextField(label = "address")
     public String address;
 
-    @TextField(displayName = "environment")
+    @TextField(label = "environment")
     public String environment;
 
-    /*@OptionsField(displayName = "supportedTypes", values = {"HTTP", "HTTPS"})
+    /*@OptionsField(label = "supportedTypes", values = {"HTTP", "HTTPS"})
     String[] types;*/
     public String getVersion() {
         return version;

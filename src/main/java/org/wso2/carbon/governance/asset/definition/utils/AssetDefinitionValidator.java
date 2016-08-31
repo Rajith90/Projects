@@ -23,6 +23,8 @@ import org.wso2.carbon.governance.asset.definition.annotations.Group;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class AssetDefinitionValidator {
 
@@ -30,7 +32,7 @@ public class AssetDefinitionValidator {
 
     public static boolean validateFields(Class assetDefinition){
         boolean isValid = true;
-        for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), assetDefinition)){
+        for (Field field : CommonUtils.getAllFields(new LinkedHashMap<>(), assetDefinition).values()){
             if(field.getDeclaredAnnotations().length == 0){
                 System.err.println(field.getName() +" field does not contain any annotation");
                 System.err.println(assetDefinition.getName() + " : Invalid Definition");
@@ -63,7 +65,7 @@ public class AssetDefinitionValidator {
                         if (!CommonUtils.isFieldPresent(assetDefinition, groupedElement)) {
                             isValid = false;
                             System.err.println("Asset Definition " + assetDefinition.getSimpleName() + " does not "
-                                    + "contain a field with displayName " + groupedElement);
+                                    + "contain a field with label " + groupedElement);
                             break;
                         }
                     }

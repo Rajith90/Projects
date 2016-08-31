@@ -31,6 +31,6 @@ public class Constants {
     public static  final String GROUP_ANNOTATION = "Group";
     public static final List<String> PRIMITIVE_TYPES = Arrays.asList("int", "float", "double", "boolean", "short",
             "byte", "long", "char","String", "Object", "Integer", "Float", "Double", "Character", "Boolean", "Short, "
-                    + "Byte", "Long", "Date", "Enum", "Document");
+                    + "Byte", "Long", "Date", "Enum", "Document", "Random");
 
 }

@@ -30,7 +30,9 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import org.wso2.carbon.governance.asset.definition.annotations.Type;
 import org.wso2.carbon.governance.asset.definition.factories.BaseFactoryClass;
+import org.wso2.carbon.governance.asset.definition.types.Service;
 import org.wso2.carbon.governance.asset.definition.types.SoapService;
+import org.wso2.carbon.governance.asset.definition.utils.AnnotationValidator;
 import org.wso2.carbon.governance.asset.definition.utils.AssetDefinitionValidator;
 import org.wso2.carbon.governance.asset.definition.utils.CommonUtils;
 import org.wso2.carbon.governance.asset.definition.utils.InputProcessor;
@@ -41,6 +43,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -65,6 +68,7 @@ public class Initiator {
             .class);*/
             org.wso2.carbon.governance.asset.definition.types.Type assetDetails = InputProcessor
                     .readInputs(assetDefinitions);
+            System.out.println(AnnotationValidator.validate(assetDetails));
             AssetInstance assetInstance = new AssetInstance(assetDetails);
             assetInstance.persistAsset();
 
@@ -76,7 +80,7 @@ public class Initiator {
     private static void traversAssetDefinitions() {
         for (Class cl : assetDefinitions.values()) {
             System.out.println(cl.getName());
-            for (Field field : CommonUtils.getAllFields(new ArrayList<Field>(), cl)) {
+            for (Field field : CommonUtils.getAllFields(new LinkedHashMap<>(), cl).values()) {
                 System.out.println(field.getName());
                 for (Annotation annotation : field.getDeclaredAnnotations()) {
                     System.out.println(annotation.toString());
